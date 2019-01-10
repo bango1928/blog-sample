@@ -1,0 +1,81 @@
+##
+## Wordpress chart configuration
+##
+image:
+  registry: docker.io
+  repository: bitnami/wordpress
+  tag: 5.0.2
+  pullPolicy: IfNotPresent
+wordpressUsername: admin
+wordpressPassword: password01
+wordpressEmail: admin@example.com
+wordpressFirstName: Jhon
+wordpressLastName: Doe
+wordpressBlogName: Engineering's Blog!
+wordpressTablePrefix: wp_
+allowEmptyPassword: "yes"
+
+replicaCount: 1
+
+##
+## Enable persistence using Persistent Volume Claims for Wordpress
+##
+persistence:
+  enabled: false
+  accessMode: ReadWriteMany
+  size: 20Gi
+  storageClass: nfs
+
+##
+## MariaDB chart configuration
+##
+mariadb:
+  enabled: true
+  replication:
+    enabled: false
+  db:
+    name: wordpress
+    user: wordpress
+    password: password01
+  rootUser:
+    password: password01
+  master:
+    persistence:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 10Gi
+
+## Kubernetes configuration
+## Set this to NodePort, elsewhere use LoadBalancer or ClusterIP
+##
+service:
+  type: LoadBalancer
+  port: 80
+  httpsPort: 443
+  nodePorts:
+    http: "30080"
+    https: "30443"
+  externalTrafficPolicy: Local
+healthcheckHttps: false
+
+
+## Configure extra options for liveness and readiness probes
+livenessProbe:
+  initialDelaySeconds: 120
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+readinessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+
+## Configure resource requests and limits
+##
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 300m
