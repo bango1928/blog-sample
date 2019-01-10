@@ -14,6 +14,14 @@ Please install this dependency below, i'm using macOS as my workstation.
 I'am using spessific account to deploy the cluster. To create the service account, from google cloud console, choose IAM & Admin > Service Accounts, and click Create Service Account. Name the service account terraform and assign it the Project Editor role. Download a JSON file and put it to file `gke-cluster/credential/account.json`.
 
 I am using terraform to build the GKE Cluster. From `gke-cluster` directory, you can follow this step:
+- Make sure change the project name in file `main.tf` to your project name
+```
+provider "google" {
+  credentials = "${file("./credential/account.json")}"
+  project     = "<your project name>"
+  region      = "asia-southeast1"
+}
+```
 - Initialize the terraform, download and install all dependency
 ```
 terraform init
@@ -58,7 +66,7 @@ To deploy the blog, execute this command:
 ## Scale Up Blog
 To scale the blog, execute this command:
 ```
-./blog.sh scale
+./blog.sh scale <number of replica>
 ```
 
 ## Delete Up Blog
